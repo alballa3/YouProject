@@ -1,188 +1,192 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { ChevronDown } from "lucide-react"
+import { useState, useEffect, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+    ArrowRight,
+    ShoppingBag,
+    ChevronLeft,
+    ChevronRight,
+    Truck,
+    RefreshCcw,
+    ThumbsUp,
+} from "lucide-react";
 
-const useTypingEffect = (text, delay = 100) => {
-  const [currentText, setCurrentText] = useState("")
-  const [currentIndex, setCurrentIndex] = useState(0)
+const products = [
+    {
+        name: "Urban Zip Hoodie",
+        image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80",
+        price: "$79.99",
+        description: "Sleek and comfortable, perfect for city life.",
+    },
+    {
+        name: "Street Comfort Pullover",
+        image: "https://images.unsplash.com/photo-1578681994506-b8f463449011?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=735&q=80",
+        price: "$69.99",
+        description: "Casual style meets ultimate comfort.",
+    },
+    {
+        name: "Nigga Plush Hoodie",
+        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQtJSndCw7tnLgUzpolwGlKxiEYbdhEt9PxGA&s",
+        price: "$89.99",
+        description: "Cool Guy Who love You :)",
+    },
+];
 
-  useEffect(() => {
-    if (currentIndex < text.length) {
-      const timeout = setTimeout(() => {
-        setCurrentText((prevText) => prevText + text[currentIndex])
-        setCurrentIndex((prevIndex) => prevIndex + 1)
-      }, delay)
+const useTypingEffect = (text, speed = 50) => {
+    const [displayedText, setDisplayedText] = useState("");
 
-      return () => clearTimeout(timeout)
-    }
-  }, [currentIndex, delay, text])
+    useEffect(() => {
+        let i = 0;
+        const timer = setInterval(() => {
+            if (i < text.length) {
+                setDisplayedText((prev) => prev + text.charAt(i));
+                i++;
+            } else {
+                clearInterval(timer);
+            }
+        }, speed);
 
-  return currentText
-}
+        return () => clearInterval(timer);
+    }, [text, speed]);
+
+    return displayedText;
+};
 
 export default function HeroSection() {
-  const [isLoaded, setIsLoaded] = useState(false)
-  const [showMore, setShowMore] = useState(false)
-  const typedText = useTypingEffect("URBAN COMFORT", 150)
-  const [currentImageIndex, setCurrentImageIndex] = useState(0)
-  const images = [
-    "https://preview.redd.it/can-somebody-explain-to-me-why-he-keeps-wearing-this-hoodie-v0-7u5wxfma7mw91.jpg?width=640&crop=smart&auto=webp&s=3d547acd6e7f21784b15ce1bb9e8442c536797a0",
-    "https://media.gq.com/photos/589de2a996e688570cf2eb5e/master/w_1600%2Cc_limit/kanye-gym-style-new1.jpg",
-    "https://i.dailymail.co.uk/1s/2019/07/09/02/15801404-0-image-a-46_1562635354529.jpg",
-  ]
+    const [currentProductIndex, setCurrentProductIndex] = useState(0);
+    const typedText = useTypingEffect("Your Original Unity");
 
-  useEffect(() => {
-    setIsLoaded(true)
-    const interval = setInterval(() => {
-      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length)
-    }, 5000)
-    return () => clearInterval(interval)
-  }, [])
+    const nextProduct = useCallback(() => {
+        setCurrentProductIndex((prevIndex) => (prevIndex + 1) % products.length);
+    }, []);
 
-  return (
-    <section className="relative  flex flex-col items-center justify-center overflow-hidden bg-black text-white">
-      {/* Background Image */}
-      <img
-        src="/placeholder.svg?height=1080&width=1920&text=Urban+Background"
-        alt="Urban background"
-        layout="fill"
-        objectFit="cover"
-        className="opacity-60"
-        priority
-      />
+    const prevProduct = useCallback(() => {
+        setCurrentProductIndex(
+            (prevIndex) => (prevIndex - 1 + products.length) % products.length
+        );
+    }, []);
 
-      {/* Content */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row items-center justify-between py-12">
-        <motion.div
-          className="lg:w-1/2 text-left mb-12 lg:mb-0"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: isLoaded ? 1 : 0, y: isLoaded ? 0 : 20 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-        >
-          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight mb-4 leading-none">{typedText}</h1>
-          <p className="text-lg sm:text-xl lg:text-2xl mb-8 max-w-xl font-light">
-            Redefining casual wear with premium hoodies that blend comfort and cutting-edge urban aesthetics.
-          </p>
-          <div className="flex flex-wrap gap-4">
-            <button className="bg-white text-black hover:bg-gray-200 transition-colors duration-300 text-lg px-8 py-4 rounded-full font-semibold transform hover:scale-105">
-              Explore Collection
-            </button>
-            <button
-              className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-black transition-colors duration-300 text-lg px-8 py-4 rounded-full font-semibold transform hover:scale-105"
-              onClick={() => setShowMore(!showMore)}
-            >
-              Read More
-            </button>
-          </div>
-        </motion.div>
-        <motion.div
-          className="lg:w-1/2"
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: isLoaded ? 1 : 0, scale: isLoaded ? 1 : 0.8 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-        >
-          <div className="relative w-full h-[400px] sm:h-[500px] rounded-lg overflow-hidden">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={currentImageIndex}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.5 }}
-                className="absolute inset-0"
-              >
-                <img
-                  src={images[currentImageIndex] || "/placeholder.svg"}
-                  alt={`Featured hoodie ${currentImageIndex + 1}`}
-                  layout="fill"
-                  objectFit="cover"
-                  className="rounded-lg shadow-2xl"
-                />
-              </motion.div>
-            </AnimatePresence>
-          </div>
-        </motion.div>
-      </div>
+    useEffect(() => {
+        const interval = setInterval(nextProduct, 5000);
+        return () => clearInterval(interval);
+    }, [nextProduct]);
 
-      {/* Read More Section */}
-      <AnimatePresence>
-        {showMore && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.5 }}
-            className="relative z-10 w-full bg-white text-black py-12"
-          >
-            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-              <h2 className="text-3xl font-bold mb-4">Our Story</h2>
-              <p className="text-lg mb-4">
-                Born from a passion for comfort and style, our brand has been at the forefront of urban fashion since
-                its inception. We believe that clothing should not only look good but feel good too.
-              </p>
-              <p className="text-lg mb-4">
-                Our team of designers work tirelessly to create hoodies that not only meet the highest standards of
-                quality but also push the boundaries of style. From the selection of premium materials to the final
-                stitching, every step of our process is infused with care and attention to detail.
-              </p>
-              <p className="text-lg">
-                Join us in our journey to redefine casual wear and experience the perfect blend of comfort and style.
-              </p>
+    return (
+        <section className="relative min-h-screen bg-white overflow-hidden">
+            {/* Background Pattern */}
+            <div className="absolute inset-0 bg-[url('/assets/subtle-pattern.png')] opacity-5"></div>
+
+            {/* Content Section */}
+            <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 flex flex-col lg:flex-row items-center justify-between">
+                {/* Left Section */}
+                <motion.div
+                    className="lg:w-1/2 text-black mb-12 lg:mb-0"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8 }}
+                >
+                    <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight mb-6">
+                        <span className="block text-transparent bg-clip-text bg-gradient-to-r from-gray-700 to-gray-900">
+                            {typedText}
+                        </span>
+                        <span className="block text-3xl sm:text-4xl lg:text-5xl mt-2 text-gray-600">
+                        Simple Yet powerful
+                        </span>
+                    </h1>
+                    <p className="text-xl mb-8 text-gray-600">
+                        Experience the perfect blend of comfort and cutting-edge
+                        urban aesthetics with our premium hoodies.
+                    </p>
+                    <div className="flex flex-wrap gap-4 mb-8">
+                        <motion.button
+                            className="group bg-black text-white hover:bg-gray-800 transition-colors duration-300 text-lg px-8 py-4 rounded-full font-semibold flex items-center"
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                        >
+                            Shop Now
+                            <ShoppingBag className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                        </motion.button>
+                        <motion.button
+                            className="group bg-transparent border-2 border-black text-black hover:bg-black hover:text-white transition-colors duration-300 text-lg px-8 py-4 rounded-full font-semibold flex items-center"
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                        >
+                            Our Story
+                            <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                        </motion.button>
+                    </div>
+                    <div className="flex flex-wrap gap-6 text-sm text-gray-600">
+                        <Feature icon={<Truck />} text="Free Shipping" />
+                        <Feature icon={<RefreshCcw />} text="30-Day Returns" />
+                        <Feature
+                            icon={<ThumbsUp />}
+                            text="Satisfaction Guaranteed"
+                        />
+                    </div>
+                </motion.div>
+
+                {/* Right Section */}
+                <motion.div
+                    className="w-full lg:w-1/2 max-w-xl mx-auto p-4"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.8 }}
+                >
+                    <ProductCarousel
+                        products={products}
+                        currentProductIndex={currentProductIndex}
+                        setCurrentProductIndex={setCurrentProductIndex}
+                    />
+                </motion.div>
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Scroll Indicator */}
-      <motion.div
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20"
-        animate={{ y: [0, 10, 0] }}
-        transition={{ repeat: Number.POSITIVE_INFINITY, duration: 1.5 }}
-      >
-        <ChevronDown size={32} className="text-white" />
-      </motion.div>
-
-      {/* Modern geometric shapes */}
-      <div className="absolute top-0 left-0 w-64 h-64 bg-white opacity-10 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-gray-500 opacity-10 rounded-full blur-3xl"></div>
-
-      {/* Overlay for better text visibility */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black via-black to-transparent opacity-70"></div>
-
-      {/* Animated lines */}
-      <svg className="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
-        <motion.line
-          x1="0"
-          y1="100%"
-          x2="100%"
-          y2="0"
-          stroke="white"
-          strokeWidth="0.5"
-          initial={{ pathLength: 0, opacity: 0 }}
-          animate={{ pathLength: 1, opacity: 0.2 }}
-          transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY, repeatType: "reverse", ease: "easeInOut" }}
-        />
-        <motion.line
-          x1="0"
-          y1="0"
-          x2="100%"
-          y2="100%"
-          stroke="white"
-          strokeWidth="0.5"
-          initial={{ pathLength: 0, opacity: 0 }}
-          animate={{ pathLength: 1, opacity: 0.2 }}
-          transition={{
-            duration: 2,
-            repeat: Number.POSITIVE_INFINITY,
-            repeatType: "reverse",
-            ease: "easeInOut",
-            delay: 1,
-          }}
-        />
-      </svg>
-    </section>
-  )
+        </section>
+    );
 }
 
+const Feature = ({ icon, text }) => (
+    <div className="flex items-center">
+        <span className="w-5 h-5 mr-2">{icon}</span>
+        {text}
+    </div>
+);
+
+const ProductCarousel = ({ products, currentProductIndex, setCurrentProductIndex }) => {
+    return (
+        <div className="relative">
+            <AnimatePresence mode="wait">
+                <motion.div
+                    key={currentProductIndex}
+                    initial={{ opacity: 0, x: 100 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -100 }}
+                    transition={{ duration: 0.5 }}
+                    className="relative w-full aspect-square sm:aspect-video lg:aspect-[3/4]"
+                >
+                    <img
+                        src={products[currentProductIndex]?.image || "/placeholder.svg"}
+                        alt={products[currentProductIndex]?.name || "Product"}
+                        className="rounded-lg shadow-2xl w-full h-full object-cover"
+                    />
+                </motion.div>
+            </AnimatePresence>
+
+            {/* Pagination Dots */}
+            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+                {products.map((_, index) => (
+                    <motion.button
+                        key={index}
+                        className={`w-3 h-3 rounded-full ${
+                            index === currentProductIndex
+                                ? "bg-black"
+                                : "bg-gray-300"
+                        }`}
+                        onClick={() => setCurrentProductIndex(index)}
+                        whileHover={{ scale: 1.2 }}
+                        whileTap={{ scale: 0.8 }}
+                    />
+                ))}
+            </div>
+        </div>
+    );
+};
