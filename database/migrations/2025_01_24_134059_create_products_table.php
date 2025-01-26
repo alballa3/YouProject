@@ -18,6 +18,8 @@ return new class extends Migration
             $table->integer("price");
             $table->json("features")->nullable(true);
             $table->json("sizes")->nullable(true);
+            $table->json("image")->nullable(true);
+            $table->boolean("published")->default(false);
             $table->timestamps();
         });
     }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import {
     Star,
@@ -13,29 +13,8 @@ import {
     ThumbsDown,
 } from "lucide-react";
 import Layout from "@/components/layout";
-
-const product = {
-    name: "Urban Zip Hoodie",
-    price: 79.99,
-    rating: 4.5,
-    reviews: 128,
-    description:
-        "Experience ultimate comfort with our Urban Zip Hoodie. Crafted from premium materials, this hoodie combines style with functionality, perfect for your urban adventures.",
-    features: [
-        "Made with 80% organic cotton and 20% recycled polyester",
-        "Soft brushed interior for extra comfort",
-        "Ribbed cuffs and hem for a snug fit",
-        "Kangaroo pocket for convenience",
-        "YKK zipper for durability",
-    ],
-    sizes: ["XS", "S", "M", "L", "XL", "XXL"],
-    colors: ["Black", "Gray", "Navy"],
-    images: [
-        "https://images.unsplash.com/photo-1556821840-3a63f95609a7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80",
-        "https://images.unsplash.com/photo-1578681994506-b8f463449011?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=735&q=80",
-        "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=720&q=80",
-    ],
-};
+import { usePage } from "@inertiajs/react";
+import LatestProducts from "@/components/pages/index/product";
 
 const reviews = [
     {
@@ -73,21 +52,36 @@ const reviews = [
 export default function ProductPage() {
     const [selectedSize, setSelectedSize] = useState("");
     const [selectedColor, setSelectedColor] = useState("");
-    const [mainImage, setMainImage] = useState(product.images[0]);
+    const [mainImage, setMainImage] = useState(""); // Initialize as empty
     const [reviewContent, setReviewContent] = useState("");
     const [reviewRating, setReviewRating] = useState(5);
 
+    const { product } = usePage().props;
+
+    useEffect(() => {
+        setMainImage(product.image[0]); // Set the main image to the first image in the array
+
+    },[])
     const handleSubmitReview = (e) => {
         e.preventDefault();
-        // Here you would typically send the review to your backend
         console.log("Review submitted:", {
             content: reviewContent,
             rating: reviewRating,
         });
-        // Reset form
         setReviewContent("");
         setReviewRating(5);
     };
+
+    // If product is not available, show a loading state
+    if (!product) {
+        return (
+            <Layout>
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                    <p>Loading product...</p>
+                </div>
+            </Layout>
+        );
+    }
 
     return (
         <Layout>
@@ -106,7 +100,7 @@ export default function ProductPage() {
                                 aria-orientation="horizontal"
                                 role="tablist"
                             >
-                                {product.images.map((image, index) => (
+                                {product.image.map((image, index) => (
                                     <button
                                         key={index}
                                         onClick={() => setMainImage(image)}
@@ -171,13 +165,13 @@ export default function ProductPage() {
                                     />
                                 ))}
                                 <p className="sr-only">
-                                    {product.rating} out of 5 stars
+                                    {product?.rating} out of 5 stars
                                 </p>
                                 <a
                                     href="#reviews"
                                     className="ml-3 text-sm font-medium text-indigo-600 hover:text-indigo-500"
                                 >
-                                    {product.reviews} reviews
+                                    {product?.reviews} reviews
                                 </a>
                             </div>
                         </div>
@@ -209,46 +203,7 @@ export default function ProductPage() {
                         </div>
 
                         <form className="mt-6">
-                            {/* Colors */}
-                            <div>
-                                <h3 className="text-sm font-medium text-gray-900">
-                                    Color
-                                </h3>
-                                <div className="mt-2">
-                                    <div className="flex items-center space-x-3">
-                                        {product.colors.map((color) => (
-                                            <button
-                                                key={color}
-                                                type="button"
-                                                className={`relative p-0.5 rounded-full flex items-center justify-center focus:outline-none ${
-                                                    selectedColor === color
-                                                        ? "ring-2 ring-offset-2 ring-gray-900"
-                                                        : ""
-                                                }`}
-                                                onClick={() =>
-                                                    setSelectedColor(color)
-                                                }
-                                            >
-                                                <span className="sr-only">
-                                                    {color}
-                                                </span>
-                                                <span
-                                                    aria-hidden="true"
-                                                    className={`h-8 w-8 border border-black border-opacity-10 rounded-full ${
-                                                        color.toLowerCase() ===
-                                                        "black"
-                                                            ? "bg-gray-900"
-                                                            : color.toLowerCase() ===
-                                                              "gray"
-                                                            ? "bg-gray-400"
-                                                            : "bg-blue-900"
-                                                    }`}
-                                                />
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
+
 
                             {/* Sizes */}
                             <div className="mt-6">
@@ -320,7 +275,7 @@ export default function ProductPage() {
                         </div>
                     </motion.div>
                 </div>
-
+                <LatestProducts/>
                 {/* Reviews section */}
                 <div className="mt-16 lg:mt-24" id="reviews">
                     <h2 className="text-2xl font-extrabold tracking-tight text-gray-900">

@@ -128,6 +128,17 @@ export default function Header() {
                                             <span>Logout</span>
                                         </Link>
                                     </DropdownMenuItem>
+                                    <DropdownMenuItem>
+                                        <a
+                                            href="/admin"
+                                            className="w-full flex items-center"
+                                        >
+                                            <LogOut className="mr-2 h-4 w-4" />
+                                            <span>
+                                                Admin
+                                            </span>
+                                        </a>
+                                    </DropdownMenuItem>
                                 </DropdownMenuContent>
                             </DropdownMenu>
                         ) : (

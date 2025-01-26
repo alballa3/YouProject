@@ -15,7 +15,8 @@ Route::controller(authController::class)->group(function () {
 
 Route::controller(ProductController::class)->group(function () {
     Route::get("products", "index");
-    Route::get("product/{product}", "show");
+    Route::get("product/least", "leastproduct");
+    Route::get("product/{id}", "show")->name('product.show');
 });
 
 Route::get("/", function () {
