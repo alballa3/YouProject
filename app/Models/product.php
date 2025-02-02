@@ -23,4 +23,13 @@ class product extends Model
         "published",
         "image"
     ];
+    public function reviews(){
+        return $this->hasMany(reviews::class);
+    }
+    public function getTotallReviews(){
+        return $this->reviews()->count();
+    }
+    public function getAvarageReviews(){
+        return $this->reviews()->avg("rating");
+    }
 }

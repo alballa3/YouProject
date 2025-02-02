@@ -66,7 +66,7 @@ export default function LatestProducts() {
                                         <div className="flex items-center">
                                             <Star className="w-5 h-5 text-yellow-400 mr-1" />
                                             <span className="text-sm text-gray-600">
-                                                {4}
+                                                {Number(product.reviews_avg_rating).toFixed()}
                                             </span>
                                         </div>
                                     </div>

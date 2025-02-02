@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ProductsResource\Pages;
 use App\Filament\Resources\ProductsResource\RelationManagers;
+use App\Filament\Resources\ProductsResource\RelationManagers\ReviewsRelationManager;
 use App\Models\product;
 use Filament\Tables\Actions\Action;
 use Filament\Forms;
@@ -97,7 +98,6 @@ class ProductsResource extends Resource
                             ->label("Product Images:")
                             ->image()
                             ->multiple()
-                            ->required(),
                     ]),
                 ])
                 ->columnSpanFull(),
@@ -124,6 +124,7 @@ class ProductsResource extends Resource
                 TextColumn::make("price")
                     ->label("Product Price")
                     ->money("AED"),
+                TextColumn::make("created_at")->label("Created At")->dateTime()->sortable(),
                 ToggleColumn::make("published"),
             ])
             ->filters([
@@ -149,7 +150,7 @@ class ProductsResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            ReviewsRelationManager::class,
         ];
     }
 

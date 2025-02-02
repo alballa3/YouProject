@@ -13,66 +13,33 @@ import {
     ThumbsDown,
 } from "lucide-react";
 import Layout from "@/components/layout";
-import { usePage } from "@inertiajs/react";
-import LatestProducts from "@/components/pages/index/product";
+import { useForm, usePage } from "@inertiajs/react";
+import LatestProducts from "@/components/pages/product/product";
+import moment from "moment";
 
-const reviews = [
-    {
-        id: 1,
-        rating: 5,
-        content:
-            "This hoodie is amazing! The quality is top-notch, and it's so comfortable. I wear it all the time.",
-        author: "Emily S.",
-        date: "May 15, 2023",
-        helpful: 24,
-        notHelpful: 2,
-    },
-    {
-        id: 2,
-        rating: 4,
-        content:
-            "Great hoodie overall. The fit is perfect, but I wish there were more color options.",
-        author: "Michael R.",
-        date: "April 30, 2023",
-        helpful: 18,
-        notHelpful: 1,
-    },
-    {
-        id: 3,
-        rating: 5,
-        content:
-            "I love how eco-friendly this hoodie is! It's soft, warm, and stylish. Definitely worth the price.",
-        author: "Sarah L.",
-        date: "June 2, 2023",
-        helpful: 31,
-        notHelpful: 0,
-    },
-];
+
 
 export default function ProductPage() {
     const [selectedSize, setSelectedSize] = useState("");
-    const [selectedColor, setSelectedColor] = useState("");
     const [mainImage, setMainImage] = useState(""); // Initialize as empty
-    const [reviewContent, setReviewContent] = useState("");
-    const [reviewRating, setReviewRating] = useState(5);
-
+    const { data, setData, post, processing, errors } = useForm({
+        rating: 5,
+        text: "This product is Great"
+    });
     const { product } = usePage().props;
-
     useEffect(() => {
         setMainImage(product.image[0]); // Set the main image to the first image in the array
 
-    },[])
-    const handleSubmitReview = (e) => {
+    }, [])
+    const handleSubmitReview = async (e) => {
         e.preventDefault();
-        console.log("Review submitted:", {
-            content: reviewContent,
-            rating: reviewRating,
-        });
-        setReviewContent("");
-        setReviewRating(5);
+        post(`/product/${product.id}`, {
+            preserveScroll: true,
+        })
+        console.log(data)
+
     };
 
-    // If product is not available, show a loading state
     if (!product) {
         return (
             <Layout>
@@ -126,7 +93,7 @@ export default function ProductPage() {
 
                         <div className="w-full aspect-w-1 aspect-h-1">
                             <img
-                                src={mainImage || "/placeholder.svg"}
+                                src={mainImage.startsWith("https") ? mainImage : `./storage/${mainImage}`}
                                 alt={product.name}
                                 className="w-full h-full object-center object-cover sm:rounded-lg"
                                 width={600}
@@ -156,22 +123,21 @@ export default function ProductPage() {
                                 {[0, 1, 2, 3, 4].map((rating) => (
                                     <Star
                                         key={rating}
-                                        className={`${
-                                            product.rating > rating
-                                                ? "text-yellow-400"
-                                                : "text-gray-300"
-                                        } h-5 w-5 flex-shrink-0`}
+                                        className={`${product.argReviews > rating
+                                            ? "text-yellow-400"
+                                            : "text-gray-300"
+                                            } h-5 w-5 flex-shrink-0`}
                                         aria-hidden="true"
                                     />
                                 ))}
                                 <p className="sr-only">
-                                    {product?.rating} out of 5 stars
+                                    {product?.argReviews} out of 5 stars
                                 </p>
                                 <a
                                     href="#reviews"
                                     className="ml-3 text-sm font-medium text-indigo-600 hover:text-indigo-500"
                                 >
-                                    {product?.reviews} reviews
+                                    {product?.totalReviews} reviews
                                 </a>
                             </div>
                         </div>
@@ -216,11 +182,10 @@ export default function ProductPage() {
                                             <button
                                                 key={size}
                                                 type="button"
-                                                className={`${
-                                                    selectedSize === size
-                                                        ? "bg-gray-900 text-white"
-                                                        : "bg-white text-gray-900 border-gray-200 hover:bg-gray-50"
-                                                } border rounded-md py-3 px-3 flex items-center justify-center text-sm font-medium uppercase focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900`}
+                                                className={`${selectedSize === size
+                                                    ? "bg-gray-900 text-white"
+                                                    : "bg-white text-gray-900 border-gray-200 hover:bg-gray-50"
+                                                    } border rounded-md py-3 px-3 flex items-center justify-center text-sm font-medium uppercase focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900`}
                                                 onClick={() =>
                                                     setSelectedSize(size)
                                                 }
@@ -275,7 +240,7 @@ export default function ProductPage() {
                         </div>
                     </motion.div>
                 </div>
-                <LatestProducts/>
+                <LatestProducts />
                 {/* Reviews section */}
                 <div className="mt-16 lg:mt-24" id="reviews">
                     <h2 className="text-2xl font-extrabold tracking-tight text-gray-900">
@@ -285,29 +250,28 @@ export default function ProductPage() {
                         <div className="flex items-center justify-between">
                             <div className="flex items-center">
                                 <p className="text-3xl font-bold text-gray-900 mr-2">
-                                    {product.rating}
+                                    {Number(product.argReviews).toFixed()}
                                 </p>
                                 <div className="flex items-center">
                                     {[0, 1, 2, 3, 4].map((rating) => (
                                         <Star
                                             key={rating}
-                                            className={`${
-                                                product.rating > rating
-                                                    ? "text-yellow-400"
-                                                    : "text-gray-300"
-                                            } h-5 w-5 flex-shrink-0`}
+                                            className={`${product.argReviews > rating
+                                                ? "text-yellow-400"
+                                                : "text-gray-300"
+                                                } h-5 w-5 flex-shrink-0`}
                                             aria-hidden="true"
                                         />
                                     ))}
                                 </div>
                             </div>
                             <p className="text-sm text-gray-500">
-                                Based on {product.reviews} reviews
+                                {/* Based on {product.reviews} reviews */}
                             </p>
                         </div>
 
                         <div className="mt-8">
-                            {reviews.map((review) => (
+                            {product.reviews && product.reviews.map((review) => (
                                 <div
                                     key={review.id}
                                     className="border-b border-gray-200 py-6"
@@ -315,39 +279,29 @@ export default function ProductPage() {
                                     <div className="flex items-center justify-between">
                                         <div>
                                             <h3 className="font-medium text-gray-900">
-                                                {review.author}
+                                                {review.user.name}
                                             </h3>
                                             <p className="text-sm text-gray-500">
-                                                {review.date}
+                                                {moment(review.created_at).fromNow()}
                                             </p>
                                         </div>
                                         <div className="flex items-center">
                                             {[0, 1, 2, 3, 4].map((rating) => (
                                                 <Star
-                                                    key={rating}
-                                                    className={`${
-                                                        review.rating > rating
-                                                            ? "text-yellow-400"
-                                                            : "text-gray-300"
-                                                    } h-5 w-5 flex-shrink-0`}
+                                                    key={review.rating}
+                                                    className={`${review.rating > rating
+                                                        ? "text-yellow-400"
+                                                        : "text-gray-300"
+                                                        } h-5 w-5 flex-shrink-0`}
                                                     aria-hidden="true"
                                                 />
                                             ))}
                                         </div>
                                     </div>
                                     <p className="mt-4 text-base text-gray-900">
-                                        {review.content}
+                                        {review.text}
                                     </p>
-                                    <div className="mt-4 flex items-center space-x-4">
-                                        <button className="flex items-center text-sm text-gray-500 hover:text-gray-700">
-                                            <ThumbsUp className="h-4 w-4 mr-1" />
-                                            Helpful ({review.helpful})
-                                        </button>
-                                        <button className="flex items-center text-sm text-gray-500 hover:text-gray-700">
-                                            <ThumbsDown className="h-4 w-4 mr-1" />
-                                            Not Helpful ({review.notHelpful})
-                                        </button>
-                                    </div>
+
                                 </div>
                             ))}
                         </div>
@@ -367,9 +321,9 @@ export default function ProductPage() {
                                 <select
                                     id="rating"
                                     name="rating"
-                                    value={reviewRating}
+                                    value={data.rating}
                                     onChange={(e) =>
-                                        setReviewRating(Number(e.target.value))
+                                        setData("rating", Number(e.target.value))
                                     }
                                     className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
                                 >
@@ -391,22 +345,25 @@ export default function ProductPage() {
                                     id="review"
                                     name="review"
                                     rows={4}
-                                    value={reviewContent}
+                                    value={data.text}
                                     onChange={(e) =>
-                                        setReviewContent(e.target.value)
+                                        setData("text", e.target.value)
                                     }
                                     className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                     placeholder="Write your review here..."
                                 ></textarea>
                             </div>
+                            {errors.error && <p className=" text-red-500">{errors.error}</p>}
                             <div className="mt-4">
                                 <button
                                     type="submit"
+                                    disabled={processing}
                                     className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                 >
                                     Submit Review
                                 </button>
                             </div>
+                            {/* <ToastContainer/> */}
                         </form>
                     </div>
                 </div>

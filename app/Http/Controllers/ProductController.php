@@ -19,28 +19,37 @@ class ProductController extends Controller
         return Inertia::render("products/all");
     }
 
-
-
     /**
      * Display the specified resource.
      */
     public function show(Request $request)
     {
         //
-        $product = product::query()->where("id", $request->id)->where("published", true)->first();
+        $product = product::query()
+            ->where("id", $request->id)
+            ->where("published", true)
+            ->with("reviews")
+            ->with("reviews.user")
+            ->first();
         if (!$product) {
             return Inertia::render("error/404");
         }
+        $product["totalReviews"] = $product->getTotallReviews();
+        $product["argReviews"] = $product->getAvarageReviews();
         return Inertia::render("products/page", [
-            "product" => $product
+            "product" => $product,
         ]);
     }
 
     public function leastproduct()
     {
+        $product = product::query()
+            ->where("published", true)
+            ->orderBy("price", "asc")
+            ->withAvg("reviews", "rating")
+            ->limit(4)
+            ->get();
 
-        $product = product::query()->where("published", true)->orderBy("price", "asc")->limit(4)->get();
         return response()->json($product);
     }
-
 }

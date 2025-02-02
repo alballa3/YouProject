@@ -5,7 +5,7 @@ import AboutUs from "@/components/pages/index/aboutus";
 import ContactUs from "@/components/pages/index/contactus";
 import HeroSection from "@/components/pages/index/hero";
 import WhatWeOffer from "@/components/pages/index/offer";
-import LatestProducts from "@/components/pages/index/product";
+import LatestProducts from "@/components/pages/product/product";
 import { Button } from "@/components/ui/button";
 
 function Home() {
