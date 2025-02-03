@@ -164,12 +164,7 @@ export default function LoginPage() {
                     </CardContent>
 
                     <CardFooter className="flex flex-col items-center space-y-4 mt-6">
-                        <a
-                            href="/forgot-password"
-                            className="text-lg text-blue-600 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-sm"
-                        >
-                            Forgot your password?
-                        </a>
+
                         <p className="text-lg text-gray-600">
                             Don't have an account?{" "}
                             <Link

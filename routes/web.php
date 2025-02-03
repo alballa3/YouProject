@@ -10,7 +10,7 @@ use Inertia\Inertia;
 Route::controller(authController::class)->group(function () {
     Route::get("auth/register", "regiserPage")->middleware("guest");
     Route::post("auth/register", "regiser")->middleware("guest");
-    Route::get("auth/login", "loginPage")->middleware("guest");
+    Route::get("auth/login", "loginPage")->middleware("guest")->name("login");
     Route::post("auth/logout", "logout")->middleware("auth");
     Route::post("auth/login", "login")->middleware("guest");
 });

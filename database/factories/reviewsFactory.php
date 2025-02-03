@@ -18,6 +18,10 @@ class ReviewsFactory extends Factory
     {
         return [
             //
+            "user_id"=> $this->faker->numberBetween(1,20),
+            "product_id"=>$this->faker->numberBetween(1,60),
+            "rating"=>$this->faker->numberBetween(3,5),
+            "text"=> $this->faker->sentence,
         ];
     }
 }

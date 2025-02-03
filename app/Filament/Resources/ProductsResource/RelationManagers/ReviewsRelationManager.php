@@ -30,12 +30,27 @@ class ReviewsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('review')
             ->columns([
-                Tables\Columns\TextColumn::make('text')->label("Review")->limit(50),
-                Tables\Columns\TextColumn::make('user.name')->label("Username"),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->label('Created At')
-                    ->dateTime()
-                    ->sortable(),
+                TextColumn::make('text')
+                ->label(__('Review'))  // Localization support
+                ->limit(50)
+                ->tooltip(fn ($record) => $record->text)  // Show full text on hover
+                ,
+            
+            TextColumn::make('user.name')
+                ->label(__('Username'))  // Localization support
+                ,
+            
+            TextColumn::make('rating')
+                ->label(__('Product Rating'))  // Localization support
+                ->numeric(1),
+                
+            
+            TextColumn::make('created_at')
+                ->label(__('Created At'))  // Localization support
+                ->dateTime('M d, Y H:i')  // Custom date format
+                ->sortable()
+                  // Default sorting by created_at in descending order
+               
             ])
             ->filters([
                 //

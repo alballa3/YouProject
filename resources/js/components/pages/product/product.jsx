@@ -83,6 +83,14 @@ export default function LatestProducts() {
                         </motion.div>
                     ))}
                 </div>
+                <div className="mt-12 text-center">
+                    <Link
+                        href="/products"
+                        className="inline-block bg-black text-white py-3 px-8 rounded-full font-semibold hover:bg-gray-800 transition-colors duration-300"
+                    >
+                        View All Products
+                    </Link>
+                </div>
             </div>
         </section>
     );

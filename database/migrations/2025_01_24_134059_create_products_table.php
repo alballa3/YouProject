@@ -19,7 +19,9 @@ return new class extends Migration
             $table->json("features")->nullable(true);
             $table->json("sizes")->nullable(true);
             $table->json("image")->nullable(true);
+            $table->integer("quantity")->default(1);
             $table->boolean("published")->default(false);
+            $table->boolean("featured")->default(false);
             $table->timestamps();
         });
     }
