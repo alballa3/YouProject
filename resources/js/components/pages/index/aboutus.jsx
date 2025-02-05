@@ -11,7 +11,7 @@ export default function AboutUs() {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">About YOU</h2>
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">About Us</h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             We're on a mission to redefine urban style with comfort at its core. Our journey began with a simple idea:
             to create hoodies that are as comfortable as they are stylish.

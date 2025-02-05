@@ -1,9 +1,21 @@
 "use client"
 
+import { useForm } from "@inertiajs/react"
 import { motion } from "framer-motion"
 import { Send, Phone, MapPin, Mail } from "lucide-react"
 
 export default function ContactUs() {
+  const { processing, errors, data, setData,post } = useForm({
+    "name": "",
+    "email": "",
+    "message": ""
+  })
+  const handle = (e) =>{
+    e.preventDefault()
+    post('/contact',{
+      preserveScroll:true
+    })
+  }
   return (
     <section className="py-24 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -25,7 +37,7 @@ export default function ContactUs() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            <form className="space-y-6">
+            <form className="space-y-6" onSubmit={handle}>
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
                   Name
@@ -34,9 +46,13 @@ export default function ContactUs() {
                   type="text"
                   id="name"
                   name="name"
-                  required
+                  value={data.name}
+                  onChange={(e) => setData("name", e.target.value)}
+                  // required
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
                 />
+                {errors.name && <p className=" text-red-500">{errors.name}</p>}
+
               </div>
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
@@ -46,9 +62,13 @@ export default function ContactUs() {
                   type="email"
                   id="email"
                   name="email"
+                  value={data.email}
+                  onChange={(e) => setData("email", e.target.value)}
                   required
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
                 />
+                {errors.email && <p className=" text-red-500">{errors.email}</p>}
+
               </div>
               <div>
                 <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
@@ -58,13 +78,19 @@ export default function ContactUs() {
                   id="message"
                   name="message"
                   rows={4}
+                  value={data.message}
+                  onChange={(e) => setData("message", e.target.value)}
                   required
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
-                ></textarea>
+                >
+
+                </textarea>
+                {errors.message && <p className=" text-red-500">{errors.message}</p>}
               </div>
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                disabled={processing}
                 className="w-full bg-black text-white py-3 px-6 rounded-full font-semibold flex items-center justify-center"
               >
                 <Send className="w-5 h-5 mr-2" />

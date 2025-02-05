@@ -78,10 +78,9 @@ export default function ProductPage() {
                                         </span>
                                         <span className="absolute inset-0 rounded-md overflow-hidden">
                                             <img
-                                                src={
-                                                    image || "/placeholder.svg"
-                                                }
-                                                alt=""
+                                                src={image.startsWith("https") ? image : `/storage/${image}`}
+
+                                                alt={product.name}
                                                 className="w-full h-full object-center object-cover"
                                                 layout="fill"
                                             />
@@ -93,7 +92,7 @@ export default function ProductPage() {
 
                         <div className="w-full aspect-w-1 aspect-h-1">
                             <img
-                                src={mainImage.startsWith("https") ? mainImage : `./storage/${mainImage}`}
+                                src={mainImage.startsWith("https") ? mainImage : `/storage/${mainImage}`}
                                 alt={product.name}
                                 className="w-full h-full object-center object-cover sm:rounded-lg"
                                 width={600}

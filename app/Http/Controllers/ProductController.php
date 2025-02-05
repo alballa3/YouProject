@@ -16,7 +16,15 @@ class ProductController extends Controller
     public function index()
     {
         //
-        return Inertia::render("products/all");
+        $products = Product::query()
+            ->where("published", true)
+            ->withAvg("reviews", "rating")
+            ->limit(8)->get();
+
+
+
+        // return response()->json($products);
+        return Inertia::render("products/all", ["product" => $products]);
     }
 
     /**

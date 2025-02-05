@@ -24,6 +24,8 @@ Route::controller(ProductController::class)->group(function () {
 
 Route::controller(ReviewsController::class)->group(function () {
     Route::post("product/{id}","post")->name("product.review")->middleware("auth");
+    Route::post("/contact","contact");
+    
 });
 
 

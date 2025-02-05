@@ -9,7 +9,7 @@ import {
     DropdownMenuTrigger,
     DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { Menu, User, X, Home, Info, Settings, LogOut } from "lucide-react";
+import { Menu, User, X, Home, Info, Settings, LogOut, Shield } from "lucide-react";
 import { Link, usePage } from "@inertiajs/react";
 
 export default function Header() {
@@ -133,7 +133,7 @@ export default function Header() {
                                             href="/admin"
                                             className="w-full flex items-center"
                                         >
-                                            <LogOut className="mr-2 h-4 w-4" />
+                                            <Shield className="mr-2 h-4 w-4" />
                                             <span>
                                                 Admin
                                             </span>
