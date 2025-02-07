@@ -21,9 +21,6 @@ class ProductController extends Controller
             ->withAvg("reviews", "rating")
             ->limit(8)->get();
 
-
-
-        // return response()->json($products);
         return Inertia::render("products/all", ["product" => $products]);
     }
 

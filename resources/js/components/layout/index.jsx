@@ -9,6 +9,7 @@ function Layout({children}) {
             <main className="py-4">
                 {children}
             </main>
+            <ToastContainer/>
             <Navbar/>
         </div>
      );

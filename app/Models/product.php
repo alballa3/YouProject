@@ -32,4 +32,7 @@ class product extends Model
     public function getAvarageReviews(){
         return $this->reviews()->avg("rating");
     }
+    public function order(){
+        return $this->hasMany(order::class);
+    }
 }

@@ -13,9 +13,10 @@ import {
     ThumbsDown,
 } from "lucide-react";
 import Layout from "@/components/layout";
-import { useForm, usePage } from "@inertiajs/react";
+import { router, useForm, usePage } from "@inertiajs/react";
 import LatestProducts from "@/components/pages/product/product";
 import moment from "moment";
+import { toast } from "react-toastify";
 
 
 
@@ -36,10 +37,24 @@ export default function ProductPage() {
         post(`/product/${product.id}`, {
             preserveScroll: true,
         })
-        console.log(data)
 
     };
-
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        router.put(`/product/${product.id}`, {
+            price: product.price,
+            size: selectedSize
+        }, {
+            onError: (errors) => {
+                console.log(errors);
+                toast.error(errors.size)
+            },
+            onSuccess: () => {
+                toast.success("The Producted added Into Your Cart !")
+            },
+            preserveScroll: true
+        })
+    }
     if (!product) {
         return (
             <Layout>
@@ -198,6 +213,7 @@ export default function ProductPage() {
 
                             <div className="mt-6">
                                 <motion.button
+                                    onClick={handleSubmit}
                                     whileHover={{ scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}
                                     className="w-full bg-gray-900 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900"

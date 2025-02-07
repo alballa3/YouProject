@@ -9,7 +9,7 @@ import {
     DropdownMenuTrigger,
     DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { Menu, User, X, Home, Info, Settings, LogOut, Shield } from "lucide-react";
+import { Menu, User, X, Home, Info, Settings, LogOut, Shield, CheckIcon } from "lucide-react";
 import { Link, usePage } from "@inertiajs/react";
 
 export default function Header() {
@@ -109,11 +109,11 @@ export default function Header() {
                                     </DropdownMenuItem>
                                     <DropdownMenuItem asChild>
                                         <Link
-                                            href="/settings"
+                                            href="/checkout"
                                             className="w-full flex items-center"
                                         >
-                                            <Settings className="mr-2 h-4 w-4" />
-                                            <span>Settings</span>
+                                            <CheckIcon className="mr-2 h-4 w-4" />
+                                            <span>Checkout</span>
                                         </Link>
                                     </DropdownMenuItem>
                                     <DropdownMenuSeparator />

@@ -50,57 +50,82 @@ class ProductsResource extends Resource
     {
         return $form->schema([
             //
-            Tabs::make("Product Details")
-                ->tabs([
-                    Tab::make("General Information")->schema([
-                        TextInput::make("name")
-                            ->label("Product Name:")
+            Tabs::make('Product Details')
+            ->tabs([
+                Tab::make('General Information')
+                    ->icon('heroicon-o-information-circle')
+                    ->schema([
+                        TextInput::make('name')
+                            ->label('Product Name')
                             ->required()
+                            ->maxLength(255)
+                            ->unique(ignoreRecord: true)
                             ->autofocus()
-                            ->suffixIcon("heroicon-o-pencil")
-                            ->placeholder("Add Product Name ex: Hoddie"),
+                            ->suffixIcon('heroicon-o-pencil')
+                            ->placeholder('Enter product name (e.g., Classic Hoodie)')
+                            ->columnSpanFull(),
 
-                        Textarea::make("description")
-                            ->label("Product Description:")
-                            ->placeholder(
-                                "Add Product Description ex: This is a good Hoddie And great ...."
-                            )
-                            ->required(),
-                        TextInput::make("price")
-                            ->label("Product Price:")
+                        Textarea::make('description')
+                            ->label('Product Description')
                             ->required()
-                            ->numeric(true)
-                            ->placeholder("Add Product Price ex: 100")
-                            ->suffixIcon("heroicon-o-currency-dollar"),
-                        TagsInput::make("features")
-                            ->columns(2)
-                            ->placeholder("Add Features ex: Look Good")
-                            ->required(),
-                        Checkbox::make("published")
-                            ->label("Published")
+                            ->maxLength(1000)
+                            ->placeholder('Provide a detailed product description...')
+                            ->columnSpanFull(),
+
+                        TextInput::make('price')
+                            ->label('Product Price')
+                            ->required()
+                            ->numeric()
+                            ->minValue(0)
+                            ->prefix('AED')
+                            ->suffixIcon('heroicon-o-currency-dollar')
+                            ->placeholder('0.00'),
+
+                        TagsInput::make('features')
+                            ->label('Product Features')
+                            ->placeholder('Add feature and press Enter')
+                            ->required()
+                            ->columnSpanFull(),
+
+                        Checkbox::make('published')
+                            ->label('Make product visible in store')
                             ->default(false)
-                            ->columns(2)
-                            ->required(),
+                            ->inline(),
                     ]),
-                    Tab::make("product information")->schema([
-                        Select::make("sizes")
-                            ->label("Available Sizes")
+
+                Tab::make('Product Information')
+                    ->icon('heroicon-o-cog')
+                    ->schema([
+                        Select::make('sizes')
+                            ->label('Available Sizes')
                             ->options([
-                                "XS" => "Extra Small(XS)",
-                                "S" => "Small(S)",
-                                "M" => "Medium(M)",
-                                "L" => "Large(L)",
-                                "XL" => "Extra Large(XL)",
+                                'XS' => 'Extra Small (XS)',
+                                'S' => 'Small (S)',
+                                'M' => 'Medium (M)',
+                                'L' => 'Large (L)',
+                                'XL' => 'Extra Large (XL)',
                             ])
                             ->multiple()
-                            ->required(),
-                        FileUpload::make("image")
-                            ->label("Product Images:")
+                            ->required()
+                            ->searchable()
+                            ->preload()
+                            ->native(false)
+                            ->columnSpanFull(),
+
+                        FileUpload::make('image')
+                            ->label('Product Images')
                             ->image()
                             ->multiple()
+                            ->maxFiles(5)
+                            ->imageEditor()
+                            ->imagePreviewHeight('250')
+                            ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
+                            ->helperText('Upload up to 5 images (JPEG, PNG, or WebP)')
+                            ->columnSpanFull(),
                     ]),
-                ])
-                ->columnSpanFull(),
+            ])
+            ->columnSpanFull()
+            ->persistTabInQueryString(),
         ]);
     }
 
