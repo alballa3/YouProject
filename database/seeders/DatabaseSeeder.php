@@ -17,6 +17,6 @@ class DatabaseSeeder extends Seeder
     {
         // product::factory(70)->create();
         // User::factory(21)->create();
-        reviews::factory(125)->create();
+        reviews::factory(250)->create();
     }
 }
